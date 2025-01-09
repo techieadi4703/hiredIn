@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import "./hello.css";
+import axios from "axios";
 const Signup = () => {
   // const history=useHistory();
   const [user, setUser] = useState({
@@ -14,7 +15,7 @@ const Signup = () => {
   let name, value;
   const handleInput = (e) => {
     // console.log(e);
-    // console.log("22qqhello input");
+    // console.log("hello input");
     name = e.target.name;
     // console.log(e.target.name);
     console.log(e.target.value);
@@ -26,19 +27,15 @@ const Signup = () => {
     console.log(user);
     const { name, email, phone, work, password, cpassword } = user;
 
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, phone, work, password, cpassword }),
-    });
+    const res = await axios.post("http://localhost:3000/register",user)
+    console.log(user);
+    //console.log(res);
    
-    const data= await res.json();
+    const data= res
     console.log(data);
     if(data.response(422)||!data){
       // window.alert("Invalid Registration");
-      // console.log(data);
+      console.log(data);
       // console.log("Invalid Registration");
     }
     else{

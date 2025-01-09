@@ -1,6 +1,19 @@
 import React from "react";
 import "./hello.css";
+import axios from "axios";
+
+async function loginUser(user){
+  try{
+    const response=await axios.post('http://localhost:3000/signin',user)
+    return response;
+  }
+  catch{}
+}
+
 const Login = () => {
+
+
+  
   return (
     <>
       <section>
