@@ -1,19 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./hello.css";
 import axios from "axios";
 
-async function loginUser(user){
-  try{
-    const response=await axios.post('http://localhost:3000/signin',user)
-    return response;
-  }
-  catch{}
-}
-
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:3000/signin", {
+        email: email,
+        password: password,
+      });
 
-  
+      if (res.status === 200) {
+        // Assuming the response status 200 indicates success
+        window.alert("Login Successful");
+        navigate("/"); // Navigate to the home page after successful login
+      } else {
+        window.alert("Invalid credentials");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      window.alert("Login Failed. Please check your credentials.");
+    }
+  };
+
   return (
     <>
       <section>
@@ -30,81 +45,36 @@ const Login = () => {
                     height="400"
                   />
                 </figure>
-                {/* <NavLink to='./signin'>/NavLink> */}
               </div>
-              <form className="register-form" id="register-form">
-                {/* <div className="form-group">
-                  <label htmlFor="name">
-                    <i class="ri-user-2-fill"></i>
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    placeholder="Your Name"
-                    autoComplete="off"
-                  />
-                </div> */}
+              <form className="register-form" id="register-form" onSubmit={handleLogin}>
                 <div className="form-group">
                   <label htmlFor="email">
-                    <i class="ri-mail-fill"></i>
+                    <i className="ri-mail-fill"></i>
                   </label>
                   <input
                     type="email"
                     name="email"
                     id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Your Email"
                     autoComplete="off"
                   />
                 </div>
-                {/* <div className="form-group">
-                  <label htmlFor="phone">
-                    <i class="ri-phone-fill"></i>
-                  </label>
-                  <input
-                    type="number"
-                    name="phone"
-                    id="phone"
-                    placeholder="Your Phone Number"
-                    autoComplete="off"
-                  />
-                </div> */}
-                {/* <div className="form-group">
-                  <label htmlFor="work">
-                    <i class="ri-slideshow-fill"></i>{" "}
-                  </label>
-                  <input
-                    type="text"
-                    name="work"
-                    id="work"
-                    placeholder="Your Profession"
-                    autoComplete="off"
-                  />
-                </div> */}
                 <div className="form-group">
                   <label htmlFor="password">
-                    <i class="ri-lock-password-fill"></i>{" "}
+                    <i className="ri-lock-password-fill"></i>
                   </label>
                   <input
                     type="password"
                     name="password"
                     id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                     autoComplete="off"
                   />
                 </div>
-                {/* <div className="form-group">
-                  <label htmlFor="cpassword">
-                    <i class="ri-lock-password-fill"></i>{" "}
-                  </label>
-                  <input
-                    type="password",
-                    name="cpassword",
-                    id="cpassword",
-                    placeholder="Confirm your Password",
-                    autoComplete="off"
-                  />
-                </div> */}
                 <div className="form-group form-button">
                   <input
                     type="submit"
@@ -122,4 +92,5 @@ const Login = () => {
     </>
   );
 };
+
 export default Login;

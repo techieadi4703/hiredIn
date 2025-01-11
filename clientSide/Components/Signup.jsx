@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
-import "./hello.css";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "./hello.css";
+
 const Signup = () => {
-  // const history=useHistory();
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -12,37 +13,27 @@ const Signup = () => {
     password: "",
     cpassword: "",
   });
-  let name, value;
+
   const handleInput = (e) => {
-    // console.log(e);
-    // console.log("hello input");
-    name = e.target.name;
-    // console.log(e.target.name);
-    console.log(e.target.value);
-    value = e.target.value;
+    const { name, value } = e.target;
     setUser({ ...user, [name]: value });
   };
+
   const postMethod = async (e) => {
     e.preventDefault();
-    console.log(user);
-    const { name, email, phone, work, password, cpassword } = user;
-
-    const res = await axios.post("http://localhost:3000/register",user)
-    console.log(user);
-    //console.log(res);
-   
-    const data= res
-    console.log(data);
-    if(data.response(422)||!data){
-      // window.alert("Invalid Registration");
-      console.log(data);
-      // console.log("Invalid Registration");
-    }
-    else{
-      window.alert("Registration Successfull");
-      console.log(data);
-      console.log("Registration Successfull"); 
-      // history.push('/login');
+    try {
+      const res = await axios.post("http://localhost:3000/register", user);
+      if (res.status === 422 || !res.data) {
+        window.alert("Invalid Registration");
+        console.log("Invalid Registration");
+      } else {
+        window.alert("Registration Successful");
+        console.log("Registration Successful");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      window.alert("Registration Failed");
     }
   };
 
@@ -53,10 +44,10 @@ const Signup = () => {
           <div className="signup-content">
             <h2 className="form-title">Sign Up</h2>
             <div className="signup-form">
-              <form className="register-form" id="register-form">
+              <form className="register-form" id="register-form" onSubmit={postMethod}>
                 <div className="form-group">
                   <label htmlFor="name">
-                    <i class="ri-user-2-fill"></i>
+                    <i className="ri-user-2-fill"></i>
                   </label>
                   <input
                     type="text"
@@ -70,7 +61,7 @@ const Signup = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="email">
-                    <i class="ri-mail-fill"></i>
+                    <i className="ri-mail-fill"></i>
                   </label>
                   <input
                     type="email"
@@ -84,7 +75,7 @@ const Signup = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="phone">
-                    <i class="ri-phone-fill"></i>
+                    <i className="ri-phone-fill"></i>
                   </label>
                   <input
                     type="number"
@@ -98,7 +89,7 @@ const Signup = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="work">
-                    <i class="ri-slideshow-fill"></i>{" "}
+                    <i className="ri-slideshow-fill"></i>
                   </label>
                   <input
                     type="text"
@@ -112,7 +103,7 @@ const Signup = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="password">
-                    <i class="ri-lock-password-fill"></i>{" "}
+                    <i className="ri-lock-password-fill"></i>
                   </label>
                   <input
                     type="password"
@@ -126,7 +117,7 @@ const Signup = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="cpassword">
-                    <i class="ri-lock-password-fill"></i>{" "}
+                    <i className="ri-lock-password-fill"></i>
                   </label>
                   <input
                     type="password"
@@ -145,7 +136,6 @@ const Signup = () => {
                     id="signup"
                     className="form-submit"
                     value="Register"
-                    onClick={postMethod}
                   />
                 </div>
               </form>
@@ -158,7 +148,6 @@ const Signup = () => {
                     height="400"
                   />
                 </figure>
-                {/* <NavLink to='./signin'>/NavLink> */}
               </div>
             </div>
           </div>
@@ -167,4 +156,5 @@ const Signup = () => {
     </>
   );
 };
+
 export default Signup;

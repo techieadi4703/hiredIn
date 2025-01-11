@@ -1,6 +1,8 @@
 const { default: mongoose } = require("mongoose");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 
 const userSchema=new mongoose.Schema({

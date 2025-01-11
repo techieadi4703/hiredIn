@@ -2,6 +2,9 @@ const express = require('express')
 const route = express.Router()
 const bcrypt=require('bcryptjs')
 require('./../db/conn')
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+require('../middlewares/auth')
 const User = require("./../model/userSchema");
 const jwt=require('jsonwebtoken')
 route.get('/', (req, res) =>{
@@ -117,18 +120,10 @@ route.post('/signin', async(req,res)=>{
 })
 
 
-route.get('/about', (req, res) =>{
-    // console.log("aftermiddleware");
+route.get('/about',auth, (req, res) =>{
+    console.log("Hello about!");
     res.send('Hello about!');
 })
-route.get('/signin', (req, res) =>{
-    res.send('Hello signin!');
-})
-route.get('/signup', (req, res) =>{
-    res.send('Hello register!');
-})
-route.get('/contact', (req, res) =>{
-    res.send('Hello contact!');
-})
+
 
 module.exports= route;
