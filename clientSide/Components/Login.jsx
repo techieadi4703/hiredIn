@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./hello.css";
 import axios from "axios";
+axios.defaults.withCredentials = true; // Include cookies by default
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +16,12 @@ const Login = () => {
       const res = await axios.post(
         "http://localhost:3000/signin", // Adjust the backend URL
         { email: email, password: password },
-        { withCredentials: true } // This sends cookies along with the request
+        { withCredentials: true },
+      {headers: {
+    "Content-Type": "application/json",
+  }},
+  {credentials: "include"}, // Include cookies in the request
+  // {body: JSON.stringify(data)},
       );
 
       if (res.status === 200) {
@@ -27,6 +34,7 @@ const Login = () => {
     } catch (error) {
       console.error("Login Error:", error);
       window.alert("Login Failed. Please check your credentials.");
+      window.alert(error);
     }
   };
 

@@ -1,16 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./hello.css";
 
 const About = () => {
   const [activeTab, setActiveTab] = useState("about");
+  const navigate = useNavigate();
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
+  const callAboutPage = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/about", {
+        method: "GET",
+        headers: {
+          // "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        credentials: "include", // Send cookies with the request
+      });
+
+      if (response.status === 401 || !response.ok) {
+        // Redirect to login if unauthorized
+        navigate("/login");
+        // window.alert("Login First to view ABOUT page.")
+        return;
+      }
+
+      const data = await response.json();
+      console.log(data);
+    } catch (err) {
+      console.error("Error fetching About page:", err);
+      navigate("/signin"); // Redirect on error
+    }
+  };
+
+  useEffect(() => {
+    callAboutPage();
+  }, []);
+
   return (
     <div className="container emp-profile">
-      <form method="">
+      <form method="GET">
         <div className="row">
           {/* Profile Image */}
           <div className="col-md-4">
@@ -33,7 +65,9 @@ const About = () => {
               <ul className="nav nav-tabs" role="tablist">
                 <li className="nav-item">
                   <button
-                    className={`nav-link ${activeTab === "about" ? "active" : ""}`}
+                    className={`nav-link ${
+                      activeTab === "about" ? "active" : ""
+                    }`}
                     onClick={() => handleTabChange("about")}
                   >
                     About
@@ -41,7 +75,9 @@ const About = () => {
                 </li>
                 <li className="nav-item">
                   <button
-                    className={`nav-link ${activeTab === "timeline" ? "active" : ""}`}
+                    className={`nav-link ${
+                      activeTab === "timeline" ? "active" : ""
+                    }`}
                     onClick={() => handleTabChange("timeline")}
                   >
                     Timeline
@@ -68,13 +104,25 @@ const About = () => {
           <div className="col-md-4">
             <div className="profile-work">
               <p>WORK LINK</p>
-              <a href="https://www.linkedin.com/in/tanmay-hari-riyesh" target="_blank" rel="noreferrer">
+              <a
+                href="https://www.linkedin.com/in/tanmay-hari-riyesh"
+                target="_blank"
+                rel="noreferrer"
+              >
                 LinkedIn Profile
               </a>
-              <a href="https://github.com/tanmayhari" target="_blank" rel="noreferrer">
+              <a
+                href="https://github.com/tanmayhari"
+                target="_blank"
+                rel="noreferrer"
+              >
                 GitHub Profile
               </a>
-              <a href="https://twitter.com/tanmayhari" target="_blank" rel="noreferrer">
+              <a
+                href="https://twitter.com/tanmayhari"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Twitter Profile
               </a>
             </div>

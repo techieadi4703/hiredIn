@@ -102,7 +102,7 @@ route.post('/signin', async (req, res) => {
       res.cookie("jwToken", token, {
         expires: new Date(Date.now() + 25892000000), // 30 days
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "strict",
         secure: false, // Set to true for production with HTTPS
       });
   
@@ -117,7 +117,7 @@ route.post('/signin', async (req, res) => {
 
 route.get('/about',auth, (req, res) =>{
     console.log("Hello about!");
-    res.send('Hello about!');
+    res.send(req.rootUser);
 })
 
 
