@@ -5,22 +5,17 @@ const app = express();
 const cors=require('cors')
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
-
-
-
 // Load environment variables
 dotenv.config({ path: './config.env' });
-
 // Constants
 const PORT = process.env.PORT || 5000; // Default to 5000 if PORT isn't set
-
 // Database connection
 require('./db/conn');
 
 // Middleware to parse JSON
 app.use(express.json());
 const corsOptions = {
-    origin: '*', // Allow only this origin
+    origin: 'http://localhost:5173', // Set the correct front-end origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
     credentials: true, // Allow credentials (e.g., cookies)

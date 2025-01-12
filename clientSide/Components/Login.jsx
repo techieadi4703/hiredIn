@@ -11,10 +11,11 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/signin", {
-        email: email,
-        password: password,
-      });
+      const res = await axios.post(
+        "http://localhost:3000/signin", // Adjust the backend URL
+        { email: email, password: password },
+        { withCredentials: true } // This sends cookies along with the request
+      );
 
       if (res.status === 200) {
         // Assuming the response status 200 indicates success
@@ -46,7 +47,11 @@ const Login = () => {
                   />
                 </figure>
               </div>
-              <form className="register-form" id="register-form" onSubmit={handleLogin}>
+              <form
+                className="register-form"
+                id="register-form"
+                onSubmit={handleLogin}
+              >
                 <div className="form-group">
                   <label htmlFor="email">
                     <i className="ri-mail-fill"></i>

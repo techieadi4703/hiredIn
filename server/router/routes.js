@@ -2,9 +2,9 @@ const express = require('express')
 const route = express.Router()
 const bcrypt=require('bcryptjs')
 require('./../db/conn')
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());
-require('../middlewares/auth')
+// const cookieParser = require('cookie-parser');
+// app.use(cookieParser());
+const auth=require('../middlewares/auth')
 const User = require("./../model/userSchema");
 const jwt=require('jsonwebtoken')
 route.get('/', (req, res) =>{
@@ -79,46 +79,41 @@ route.post('/register', async (req, res) =>{
     }
 })
 
-route.post('/signin', async(req,res)=>{
-    try{
-        // let token;
-        const {email, password} = req.body;
-        if(!email || !password){
-            return res.status(400).json({error: "Please fill all fields."});
-        }
-        const userExist = await User.findOne({email:email});
-        // console.log(userExist);
-        
-        if(!userExist){
-            return res.status(400).json({error: "Invalid mcredentials."});
-        }
-        else{
-            const match = await bcrypt.compare(password,userExist.password);
-            const token= await userExist.generateAuthToken();
-            console.log(token);
-            res.cookie("jwToken",token,{
-                expires:new Date(Date.now()+ 25892000000), // 30 days
-                httpOnly:true,
-                sameSite: "none",
-                secure: true,
-            });
-            if(!match){
-                return res.status(400).json({error: "Invalid pcredentials."});
-            }
-            else{
-                console.log(userExist);
-                // console.log('my token is',token);
-                res.json({'message':'welcome beta'})
-                console.log('welcome mr.',userExist.name)
-            }
-        }
-        
-
-    }catch(err){
-        console.log(err);
+route.post('/signin', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ error: "Please fill all fields." });
+      }
+  
+      const userExist = await User.findOne({ email: email });
+      if (!userExist) {
+        return res.status(400).json({ error: "Invalid ucredentials." });
+      }
+  
+      const match = await bcrypt.compare(password, userExist.password);
+      if (!match) {
+        return res.status(400).json({ error: "Invalid passcredentials." });
+      }
+  
+      const token = await userExist.generateAuthToken();
+      console.log("Generated Token:", token);
+  
+      res.cookie("jwToken", token, {
+        expires: new Date(Date.now() + 25892000000), // 30 days
+        httpOnly: true,
+        sameSite: "none",
+        secure: false, // Set to true for production with HTTPS
+      });
+  
+      res.json({ message: "Sign-in successful!" });
+      console.log("User signed in:", userExist.name);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Server error");
     }
-})
-
+  });
+  
 
 route.get('/about',auth, (req, res) =>{
     console.log("Hello about!");
