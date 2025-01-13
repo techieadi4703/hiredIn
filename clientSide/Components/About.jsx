@@ -6,12 +6,7 @@ const About = () => {
   const [activeTab, setActiveTab] = useState("about");
   const navigate = useNavigate();
   const [userData, setUserData] = useState([]);
-
-  const handleTabChange = (tab) => {
-    console.log("Switching to tab:", tab); // Debug log
-    setActiveTab(tab);
-  };
-
+  
   const callAboutPage = async () => {
     try {
       const response = await fetch("http://localhost:3000/about", {

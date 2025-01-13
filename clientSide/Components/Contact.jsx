@@ -1,7 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./hello.css";
 
 const Contact = () => {
+
+    const [userData, setUserData] = useState([]);
+    useEffect(() => {
+      callContactPage();
+    }, []);
+    
+    const callContactPage = async () => {
+      try {
+        console.log("cominggggggggggg")
+        const response = await fetch("http://localhost:3000/contact", {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+  
+        if (response.status === 401 || !response.ok) {
+          // Redirect to login if unauthorized
+          return;
+        }
+  
+        const data = await response.json();
+        console.log(data);
+        setUserData(data);
+      } catch (err) {
+        console.error("Error fetching About page:", err);
+      }
+    };
+  
+    console.log(userData.name);
+    console.log("beta")
+
   return (
     <>
       <div className="contact_info">
@@ -52,6 +84,7 @@ const Contact = () => {
                     <input
                       type="text"
                       placeholder="Your Name"
+                      value={userData.name}
                       name="name"
                       required
                       id="contact_form_name"
@@ -59,7 +92,8 @@ const Contact = () => {
                     />
                     <input
                       type="email"
-                      placeholder="Your Email"
+                      placeholder="Your E-mail"
+                      value={userData.email}
                       name="email"
                       required
                       id="contact_form_email"
@@ -68,6 +102,7 @@ const Contact = () => {
                     <input
                       type="number"
                       placeholder="Your Number"
+                      value={userData.phone}
                       name="number"
                       required
                       id="contact_form_number"
