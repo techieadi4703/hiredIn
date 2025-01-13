@@ -16,6 +16,7 @@ const Contact = () => {
           headers: {
             Accept: "application/json",
           },
+          credentials: "include", // Send cookies with the request
         });
   
         if (response.status === 401 || !response.ok) {
