@@ -5,8 +5,10 @@ import "./hello.css";
 const About = () => {
   const [activeTab, setActiveTab] = useState("about");
   const navigate = useNavigate();
+  const [userData, setUserData] = useState([]);
 
   const handleTabChange = (tab) => {
+    console.log("Switching to tab:", tab); // Debug log
     setActiveTab(tab);
   };
 
@@ -15,7 +17,6 @@ const About = () => {
       const response = await fetch("http://localhost:3000/about", {
         method: "GET",
         headers: {
-          // "Content-Type": "application/json",
           Accept: "application/json",
         },
         credentials: "include", // Send cookies with the request
@@ -24,15 +25,15 @@ const About = () => {
       if (response.status === 401 || !response.ok) {
         // Redirect to login if unauthorized
         navigate("/login");
-        // window.alert("Login First to view ABOUT page.")
         return;
       }
 
       const data = await response.json();
       console.log(data);
+      setUserData(data);
     } catch (err) {
       console.error("Error fetching About page:", err);
-      navigate("/signin"); // Redirect on error
+      navigate("/login"); // Redirect on error
     }
   };
 
@@ -57,23 +58,21 @@ const About = () => {
           {/* Profile Header */}
           <div className="col-md-6">
             <div className="profile-head">
-              <h5>TMHRI</h5>
-              <h6>Founder & CEO</h6>
+              <h5>{userData.name}</h5>
+              <h6>{userData.work}</h6>
               <p className="proile-rating mt-3 mb-5">
                 Rating : <span>4.2/5</span>
               </p>
               <ul className="nav nav-tabs" role="tablist">
                 <li className="nav-item">
-                  <button
-                    className={`nav-link ${
-                      activeTab === "about" ? "active" : ""
-                    }`}
-                    onClick={() => handleTabChange("about")}
+                  <div
+                    className={`nav`}
+                    // onClick={() => handleTabChange("about")}
                   >
                     About
-                  </button>
+                  </div>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <button
                     className={`nav-link ${
                       activeTab === "timeline" ? "active" : ""
@@ -82,7 +81,7 @@ const About = () => {
                   >
                     Timeline
                   </button>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
@@ -138,7 +137,7 @@ const About = () => {
                       <label>User ID</label>
                     </div>
                     <div className="col-md-6">
-                      <p>TMH12345</p>
+                      <p>{userData._id}</p>
                     </div>
                   </div>
                   <div className="row mt-3">
@@ -146,7 +145,7 @@ const About = () => {
                       <label>Name</label>
                     </div>
                     <div className="col-md-6">
-                      <p>Tanmay Hari</p>
+                      <p>{userData.name}</p>
                     </div>
                   </div>
                   <div className="row mt-3">
@@ -154,14 +153,14 @@ const About = () => {
                       <label>Email</label>
                     </div>
                     <div className="col-md-6">
-                      <p>tanmayhari@example.com</p>
+                      <p>{userData.email}</p>
                     </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {activeTab === "timeline" && (
+            {/* {activeTab === "timeline" && (
               <div className="tab-content profile-tab">
                 <div className="tab-pane fade show active">
                   <div className="row">
@@ -190,7 +189,7 @@ const About = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </form>

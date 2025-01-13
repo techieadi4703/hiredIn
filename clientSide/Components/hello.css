@@ -724,24 +724,15 @@ body {
   border-bottom: 2px solid #ddd;
 }
 
-.nav-tabs .nav-link {
+.nav-tabs .nav {
   background: transparent;
   border: none;
   color: #666;
   font-size: 16px;
   margin-right: 10px;
-  cursor: pointer;
+  /* cursor: pointer; */
+  cursor: default;
   transition: all 0.3s ease-in-out;
-}
-
-.nav-tabs .nav-link:hover {
-  color: #0056b3;
-}
-
-.nav-tabs .nav-link.active {
-  color: #007bff;
-  font-weight: bold;
-  border-bottom: 2px solid #007bff;
 }
 
 /* Edit Button */
