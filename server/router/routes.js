@@ -7,6 +7,7 @@ require('./../db/conn')
 const auth=require('../middlewares/auth')
 const User = require("./../model/userSchema");
 const jwt=require('jsonwebtoken')
+
 route.get('/', (req, res) =>{
     console.log('router working')
     res.send('Hello World!');
@@ -119,6 +120,9 @@ route.get('/about',auth, (req, res) =>{
     console.log("Hello about!");
     res.send(req.rootUser);
 })
-
+route.get('/contact',auth, (req, res) =>{
+    console.log("Hello contact!");
+    res.send(req.rootUser);
+})
 
 module.exports= route;
