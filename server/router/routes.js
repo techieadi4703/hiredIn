@@ -104,7 +104,7 @@ route.post('/signin', async (req, res) => {
         expires: new Date(Date.now() + 25892000000), // 30 days
         httpOnly: true,
         sameSite: "strict",
-        secure: false, // Set to true for production with HTTPS
+        secure: false, 
       });
   
       res.json({ message: "Sign-in successful!" });
@@ -143,4 +143,11 @@ route.post('/cont',auth, async (req, res) =>{
         console.log(err);
     }
 })
+
+route.get('/logout', (req, res) => {
+    res.clearCookie("jwToken", { path: "/" });
+    res.status(200).json({ message: "Logout successful!" });
+  });
+  
+
 module.exports= route;
