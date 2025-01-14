@@ -124,5 +124,23 @@ route.get('/contact',auth, (req, res) =>{
     console.log("Hello contact!");
     res.send(req.rootUser);
 })
-
+route.post('/cont',auth, async (req, res) =>{
+    console.log("Hello contact!");
+    try{
+        const {name,email,phone,message}=req.body;
+        if(!name||!email||!phone||!message){
+            console.log("error in contact form");
+            return res.status(400).json({error:"Please fill all contact fields."})
+        }
+        const userContact=await User.findOne({_id:req.userID})
+        if(userContact){
+            const userMessage=await userContact.addMessage(name,email,phone,message);
+            await userContact.save();
+            console.log("Message added");
+            res.status(201).json({message:"user contaxct succesful"})
+        }
+    }catch(err){
+        console.log(err);
+    }
+})
 module.exports= route;
