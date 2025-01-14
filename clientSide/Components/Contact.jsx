@@ -3,9 +3,10 @@ import "./hello.css";
 
 const Contact = () => {
 
-    const [userData, setUserData] = useState([]);
-    useEffect(() => {
-      callContactPage();
+  
+  const [userData, setUserData] = useState({name:"",email:"",phone:"",message:""});
+  useEffect(() => {
+    callContactPage();
     }, []);
     
     const callContactPage = async () => {
@@ -23,17 +24,48 @@ const Contact = () => {
           // Redirect to login if unauthorized
           return;
         }
-  
+        
         const data = await response.json();
         console.log(data);
-        setUserData(data);
+        // setUserData(data);
+        setUserData({...userData,[name]:value})
       } catch (err) {
         console.error("Error fetching About page:", err);
       }
     };
-  
+    
     console.log(userData.name);
     console.log("beta")
+    
+    const handleInput=(e)=>{
+      const name=e.target.name;
+      const value=e.target.value; 
+      console.log("Input handled");
+    }
+
+    const postToBackend= async(e)=>{
+      console.log("postinggggggggggggggggggggggggggggggg");
+        e.preventDefault();
+        const {name,email,phone,message}=userData;
+        const res= await fetch('/contact',{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+          }, 
+          body:JSON.stringify({name,email,phone,message})
+        })
+        const data=await res.json();
+        console.log(data);
+        if(!data){
+          alert('Failed to send message')
+          console.log('message not send')
+        }
+        else{
+          alert('Message sent successfully')
+          console.log('message sent')
+          setUserData({...userData,message:""})
+        }
+    }
 
   return (
     <>
@@ -85,6 +117,7 @@ const Contact = () => {
                     <input
                       type="text"
                       placeholder="Your Name"
+                      onChange={handleInput}
                       value={userData.name}
                       name="name"
                       required
@@ -94,6 +127,7 @@ const Contact = () => {
                     <input
                       type="email"
                       placeholder="Your E-mail"
+                      onChange={handleInput}
                       value={userData.email}
                       name="email"
                       required
@@ -103,8 +137,9 @@ const Contact = () => {
                     <input
                       type="number"
                       placeholder="Your Number"
+                      onChange={handleInput}
                       value={userData.phone}
-                      name="number"
+                      name="phone"
                       required
                       id="contact_form_number"
                       className="contact_form_input"
@@ -114,14 +149,18 @@ const Contact = () => {
                   <div className="contact_form_text mt-3">
                     <textarea
                       rows={5}
+                      name="message"
                       className="text_field contact_form_message"
                       placeholder="Message"
+                      value={userData.message}
+                      onChange={handleInput}
                     ></textarea>
                   </div>
 
                   <div className="contact_form_button text-center mt-3">
                     <button
                       type="submit"
+                      onClick={postToBackend}
                       className="button contact_submit_button"
                     >
                       Send Message
